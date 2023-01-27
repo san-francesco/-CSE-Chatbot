@@ -1,1 +1,1 @@
-# -CSE-Chatbot
+# USF CSE Advising Chatbot
