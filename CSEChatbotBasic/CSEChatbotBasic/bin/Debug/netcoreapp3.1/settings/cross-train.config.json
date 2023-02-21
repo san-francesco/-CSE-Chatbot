@@ -1,8 +1,0 @@
-{
-  "WelcomeDialog.en-us": {
-    "rootDialog": false,
-    "triggers": {
-      "hi": ""
-    }
-  }
-}
