@@ -1,0 +1,16 @@
+[import](common.lg)
+
+# TextInput_Prompt_9gHkSp()
+[Activity
+    Text = ${TextInput_Prompt_9gHkSp_text()}
+]
+
+# TextInput_Prompt_9gHkSp_text()
+- Are you a student?
+# SendActivity_f1K1kb()
+[Activity
+    Text = ${SendActivity_f1K1kb_text()}
+]
+
+# SendActivity_f1K1kb_text()
+- aight
