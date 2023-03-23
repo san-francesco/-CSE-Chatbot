@@ -113,9 +113,6 @@ a:active {
 .sideBar {
     -ms-flex: 30%;
     flex: 30%;
-    padding: 5px;
-    padding-left: 2%;
-    margin-right: 5%;
 }
 
 .sideBar a {
@@ -129,7 +126,7 @@ a:active {
 .main {
     -ms-flex: 70%;
     flex: 70%;
-    padding-right: 30%;
+    padding-right: 40%;
 }
 
 .main a {
@@ -145,13 +142,14 @@ a:active {
     -ms-flex: 30%;
     position: flex;
     flex: 30%;
-    max-width: 9%;
+    max-width: 10%;
 }
 
 .text {
     -ms-flex: 70%;
     flex: 70%;
-    color: black
+    color: black;
+    margin-left: 40px;
 }
 
 .hours {
@@ -209,33 +207,15 @@ footer {
     .sideBar {
         -ms-flex: 20%;
         flex: 20%;
+        padding: 2%;
     }
 }
 
-<<<<<<< Updated upstream
-@media screen and (max-width: 828px) {
-    .pic {
-        max-width: 5%;
-    }
-    .text {
-        -ms-flex: 70%;
-        flex: 70%;
-    }
-    .main {
-        margin-left: 0;
-        -ms-flex: 80%;
-        flex: 80%;
-    }
-    .sideBar {
-        -ms-flex: 20%;
-        flex: 20%;
-=======
 @media screen and (max-width: 700px) {
     #content1 {
         flex-direction: column;
     }
     .main {
         padding-right: 0;
->>>>>>> Stashed changes
     }
 }
