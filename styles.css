@@ -1,0 +1,194 @@
+.headerBanner {
+    background-color: #384B52;
+    position: flex;
+    height: 49px;
+    margin: -10px;
+    font-family: "Barlow Condensed", sans-serif;
+    text-transform: uppercase;
+    column-count: 2;
+    column-gap: 50%;
+}
+.headerTitle {
+    color: white;
+    background-color: #3f565e;
+    position: flex;
+    width: 100%;
+    height: 150px;
+    margin-top: -35px;
+    margin-left: -10px;
+    text-transform: uppercase;
+    line-height: 1em;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 35px;
+    padding-left: 35px;
+}
+.headerSubtitle {
+    text-transform: uppercase;
+    font-size: 15px;
+    font-family: "Barlow Condensed", sans-serif;
+    margin-top: -40px;
+}
+.headerSubtitle1 {
+    padding-top: 30px;
+}
+.headerText {
+    position: flex;
+    line-height: 1em;
+    font-family: "Barlow Condensed", sans-serif;
+    text-transform: uppercase;
+    padding-left: 15px;
+}
+.headerLinks {
+    background-color: #EFEFF0;
+    position: flex;
+    width: 100%;
+    height: 78px;
+    margin: -10px;
+    margin-top: -20px;
+    padding-right: 20px;
+    text-align: center;
+    color: #006747;
+    text-transform: uppercase;
+    font-size: 20px;
+}
+.list1 li {
+    display: inline-block;
+    font-weight: bold;
+    padding: 10px;
+    margin-top: 15px;
+    color: #006747 !important;
+}
+.bullsIcon1 {
+    position: absolute;
+    width: 45px;
+    padding-top: 5px;
+}
+.test {
+    text-align: left;
+    padding-left: 35px;
+    padding-right: auto;
+}
+.test1 {
+    text-align: right;
+    padding-left: auto;
+    padding-right: 35px;
+    padding-top: 17px;
+}
+a:link {
+    text-decoration: none;
+    color: white;
+}
+a:visited {
+    color: white;
+}  
+a:hover {
+    color: white;
+    text-decoration: underline;
+}
+a:active {
+    color: white;
+}
+#content {
+    font: 1.2em "Barlow Condensed", sans-serif;
+    color: #3f565e;
+    text-align: left;
+    padding-left: 40px;
+}
+#content1 {
+    font: 1.2em "Barlow Condensed", sans-serif;
+    color: #3f565e;
+    text-align: left;
+    padding-left: 40px;
+    display: flex;
+    display: -ms-flexbox;
+    margin-top: -30px;
+}
+.sideBar {
+    -ms-flex: 30%;
+    flex: 30%;
+    padding: 2%;
+}
+.main {
+    -ms-flex: 70%;
+    flex: 70%;
+    margin-top: 20px;
+    margin-left: -20%;
+}
+.list2 li{
+    display: block;
+    font-size: 17px;
+    margin-left: -70px;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 8px;
+}
+.advisor {
+    display: -ms-flexbox;
+    display: flex;
+}
+.pic {
+    -ms-flex: 30%;
+    position: flex;
+    flex: 30%;
+    margin-top: -10px;
+    max-width: 9%;
+}
+.text {
+    -ms-flex: 80%;
+    flex: 80%;
+    margin-top: -25px;
+    color: black
+}
+.hours {
+    padding: 0;
+    margin: 0;
+    width: 60%;
+    margin-top: -25px;
+    color: black;
+}
+footer {
+    background-color: #006747;
+    color: white;
+    padding: 50px ;
+    margin: -10px;
+    margin-bottom: -20px;
+    text-align: center;
+}
+
+@media screen and (max-width: 1280px) {
+    .pic {
+        max-width: 15%;
+    }
+    .text {
+        -ms-flex: 70%;
+        flex: 70%;
+    }
+    .main {
+        margin-left: 0;
+        -ms-flex: 80%;
+        flex: 80%;
+    }
+    .sideBar {
+        -ms-flex: 20%;
+        flex: 20%;
+    }
+}
+
+@media screen and (max-width: 828px) {
+    .pic {
+        max-width: 5%;
+    }
+    .text {
+        -ms-flex: 70%;
+        flex: 70%;
+    }
+    .main {
+        margin-left: 0;
+        -ms-flex: 80%;
+        flex: 80%;
+    }
+    .sideBar {
+        -ms-flex: 20%;
+        flex: 20%;
+    }
+}
