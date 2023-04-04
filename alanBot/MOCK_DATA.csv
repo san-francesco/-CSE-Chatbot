@@ -1,0 +1,51 @@
+u_number,first_name,last_name,email,street_address,pin_number,gpa,uldp,class_level,registration_status,major,hours
+81423404,Boot,Clacson,bclacson0@usf.edu,8 Grim Plaza,8389,0.29,FALSE,junior,FALSE,cpe,16
+61657024,Denise,Tille,dtille1@usf.edu,42938 Kenwood Place,5905,0.58,FALSE,junior,FALSE,cys,103
+80484210,Philippe,Domokos,pdomokos2@usf.edu,0646 Green Ridge Point,1020,1.56,FALSE,freshmen,TRUE,other,100
+38254930,Johnette,Goslin,jgoslin3@usf.edu,783 Nevada Alley,9182,3.13,FALSE,senior,TRUE,other,96
+78989305,Cassie,Parram,cparram4@usf.edu,9 Scofield Circle,9102,2.86,TRUE,junior,FALSE,it,114
+14271141,Valaria,Noades,vnoades5@usf.edu,9 Lindbergh Way,3105,1.63,FALSE,junior,TRUE,cs,37
+43186425,Evangelin,Bassilashvili,ebassilashvili6@usf.edu,9 Brown Parkway,6211,2.68,TRUE,freshmen,FALSE,cys,64
+49121773,Orly,Korfmann,okorfmann7@usf.edu,54 Eagle Crest Point,2709,3.5,FALSE,sophmore,FALSE,cpe,121
+57435371,Leelah,Yerby,lyerby8@usf.edu,58 Bayside Terrace,4166,2.36,TRUE,junior,FALSE,other,124
+77918533,Moe,Woodall,mwoodall9@usf.edu,87785 Blue Bill Park Circle,4468,1.56,TRUE,junior,TRUE,cys,120
+75086577,Bartel,Mashro,bmashroa@usf.edu,1 Independence Circle,7695,3.04,FALSE,senior,FALSE,other,67
+10413803,Emelyne,Demead,edemeadb@usf.edu,211 Talmadge Way,6475,2.42,TRUE,junior,FALSE,it,106
+16041388,Alvy,Casaccio,acasaccioc@usf.edu,86766 Shasta Crossing,2593,3.61,FALSE,sophmore,FALSE,cys,13
+20573151,Rubia,Osbourne,rosbourned@usf.edu,86219 Stang Center,6755,1.77,TRUE,senior,TRUE,cys,100
+91257479,Germayne,Delos,gdelose@usf.edu,748 Canary Road,9530,2.21,TRUE,freshmen,FALSE,cpe,96
+59601700,Guillema,Padberry,gpadberryf@usf.edu,90988 Main Drive,5935,1.42,FALSE,junior,FALSE,cs,102
+64777978,Emmit,Casina,ecasinag@usf.edu,9 Springs Street,9219,2.66,TRUE,junior,FALSE,cys,57
+80378748,Jerad,Evason,jevasonh@usf.edu,28 Anniversary Drive,3767,3.25,TRUE,junior,TRUE,other,94
+58578548,Mabel,Donalson,mdonalsoni@usf.edu,2923 Huxley Street,3204,3.12,TRUE,senior,TRUE,cys,30
+62223955,Kristi,Habishaw,khabishawj@usf.edu,39930 Commercial Road,7103,2.74,FALSE,senior,TRUE,cys,115
+94799549,Carmina,Davidsen,cdavidsenk@usf.edu,9 Columbus Parkway,7407,3.87,TRUE,freshmen,FALSE,cpe,26
+52440550,Nettle,Brightling,nbrightlingl@usf.edu,65 Ryan Street,7332,0.82,FALSE,senior,TRUE,cpe,127
+59176891,Gnni,Cropper,gcropperm@usf.edu,3188 Eliot Street,6147,1.02,TRUE,junior,FALSE,cys,32
+26386628,Leontyne,Fleischer,lfleischern@usf.edu,213 Summer Ridge Point,4175,2.86,TRUE,sophmore,FALSE,it,73
+31164772,Carlita,Thicking,cthickingo@usf.edu,99762 Bartelt Court,5472,1.61,FALSE,junior,TRUE,cpe,128
+30157658,Tony,Sommerville,tsommervillep@usf.edu,75516 Summit Park,9648,0.61,FALSE,freshmen,TRUE,cs,101
+39368410,Meridith,Spellicy,mspellicyq@usf.edu,841 Heffernan Plaza,8018,0.42,FALSE,freshmen,FALSE,other,35
+32495314,Ruprecht,Sallter,rsallterr@usf.edu,495 Tony Center,6105,3.09,FALSE,sophmore,TRUE,cs,43
+90045414,Ailbert,Pitkins,apitkinss@usf.edu,3 Cody Lane,9470,3.81,TRUE,sophmore,TRUE,it,110
+29590032,Jocko,Leere,jleeret@usf.edu,8091 Vernon Circle,2068,3.74,TRUE,junior,FALSE,cpe,77
+78236081,Crystal,Goscomb,cgoscombu@usf.edu,64942 Green Place,8640,1.58,TRUE,senior,TRUE,other,111
+11792383,Lane,Crebbin,lcrebbinv@usf.edu,687 Victoria Hill,1370,0.97,FALSE,freshmen,FALSE,cys,41
+88080483,Flynn,Titmus,ftitmusw@usf.edu,5281 Algoma Road,6412,3.56,TRUE,senior,TRUE,cs,77
+60747155,Nydia,Silson,nsilsonx@usf.edu,143 Oak Valley Avenue,3317,2.41,TRUE,junior,TRUE,cs,71
+39734724,Spencer,Fawckner,sfawcknery@usf.edu,25756 Grover Lane,8573,2.9,TRUE,sophmore,FALSE,cpe,18
+18214503,Edan,Mateus,emateusz@usf.edu,3092 Hintze Street,3668,3.98,FALSE,sophmore,FALSE,cs,81
+88063579,Ker,Cottesford,kcottesford10@usf.edu,0843 Loomis Drive,2201,0.14,TRUE,sophmore,FALSE,it,117
+74337957,Maryrose,Atcock,matcock11@usf.edu,3142 Eagle Crest Trail,4743,2.04,TRUE,junior,FALSE,other,45
+77873698,Augie,Colman,acolman12@usf.edu,289 Prairie Rose Pass,9185,0.8,FALSE,junior,TRUE,cys,66
+12298605,Carmine,Inchcomb,cinchcomb13@usf.edu,4281 Cottonwood Parkway,2092,3.54,TRUE,sophmore,FALSE,other,79
+72421723,Trenton,Mityakov,tmityakov14@usf.edu,7183 Fairview Terrace,2107,1.7,FALSE,sophmore,TRUE,it,20
+56446440,Mikel,McErlaine,mmcerlaine15@usf.edu,0087 Texas Alley,9751,2.96,FALSE,freshmen,TRUE,other,37
+37780006,Packston,Esp,pesp16@usf.edu,4856 Claremont Place,6615,3.68,FALSE,junior,TRUE,cs,29
+22866852,Joaquin,Prium,jprium17@usf.edu,68 Lindbergh Circle,3583,2.58,TRUE,freshmen,TRUE,cpe,122
+20311058,Pamella,Bawle,pbawle18@usf.edu,5 Jay Crossing,3537,2.75,TRUE,senior,FALSE,it,35
+63038207,Poppy,Graysmark,pgraysmark19@usf.edu,1395 Quincy Court,7314,2.88,FALSE,senior,FALSE,cpe,68
+96670896,Merrie,Maycey,mmaycey1a@usf.edu,07 Summer Ridge Trail,4238,3.71,FALSE,senior,FALSE,it,73
+44754568,Solly,Grayshon,sgrayshon1b@usf.edu,3 Walton Circle,2961,2.77,FALSE,junior,TRUE,cs,38
+58594458,Meridel,Witnall,mwitnall1c@usf.edu,560 Valley Edge Park,1650,0.11,TRUE,senior,FALSE,cs,109
+31059109,Leigha,Dobbins,ldobbins1d@usf.edu,20 Little Fleur Pass,5355,2.34,FALSE,sophmore,FALSE,it,64
