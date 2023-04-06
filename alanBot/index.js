@@ -73,13 +73,18 @@ app.post('/', express.json(), (req, res)=> {
 
     function gpa(agent) {
 
-        var gpa = agent.context.get("u_number").parameters.number;
-        console.log(gpa);
+        var u_number = agent.context.get("u_number").parameters.number;
+        console.log(u_number);
         
-        return db.collection('mock').get({
-            gpa: gpa
-        }).then(ref => {
-            agent.add('DATA FETCHED FROM FIREBASE: ' + gpa);  
+        return db.collection('mock')
+        .where("u_number", "==", u_number)
+        .get()
+        .then(ref => {
+            const matchedGpa = ref.docs.map((doc) => doc.data().gpa);
+            agent.add("DATA FETCHED FROM FIREBASE: " + matchedGpa);  
+        })
+        .catch((error) => {
+            console.error("Error getting documents ", error);
         });
 
     }
