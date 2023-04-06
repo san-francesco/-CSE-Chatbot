@@ -1,0 +1,139 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/pdf-lib@1.4.0"></script>
+    <script src="https://unpkg.com/downloadjs@1.4.7"></script>
+  </head>
+
+  <body>
+    <p>Click the button to modify an existing PDF document with <code>pdf-lib</code></p>
+    <button onclick="modifyPdf()">Modify PDF</button>
+    <p class="small">(Your browser will download the resulting file)</p>
+  </body>
+
+  <script>
+    /* PDF EDITING CODE STARTS HERE */
+
+    const { degrees, PDFDocument, rgb, StandardFonts } = PDFLib
+
+    async function modifyPdf() {
+      
+      // Get ULDP form URL
+      const url = 'https://www.usf.edu/engineering/student-services/documents/uldp-form.pdf'
+  		const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
+
+      // Load a PDFDocument from the existing PDF bytes
+      const pdfDoc = await PDFDocument.load(existingPdfBytes)
+
+      // Embed the Helvetica font
+      const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+
+      // Get the first page of the document
+      const pages = pdfDoc.getPages()
+      const firstPage = pages[0]
+
+      // Get the width and height of the first page
+      const { width, height } = firstPage.getSize()
+
+      /* GET DATA FROM FIREBASE. HARDCODED FOR NOW */
+      
+      var lastName = "Ahmed"
+      var lastName_x = 160
+      var lastName_y = 630
+
+      var firstName = "Samir"
+      var firstName_x = 430
+      var firsName_y = 630
+
+      var UID = "U28374830"
+      var UID_x = 100
+      var UID_y = 608
+
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+      var yyyy = today.getFullYear();
+      today = mm + '/' + dd + '/' + yyyy;
+      var today_x = 455
+      var today_y = 304
+      
+      var major = "cys"
+      var major_check = "x"
+      var major_prior = "nothing for now"
+      switch(major){
+        case "cpe":
+          major_x = 74; major_y = 540;   /* checkbox coordinates from file */
+          break;
+        case "cs":
+          major_x = 182; major_y = 570;
+          break;
+        case "cys":
+          major_x = 182; major_y = 555;
+          break;
+        case "it":
+          major_x = 308; major_y = 540;
+          break;
+        defualt:
+          console.log("major input not recognized")
+      }
+
+      /* POPULATE EACH PDF SECTION */
+
+      // Last Name
+      firstPage.drawText(lastName, {
+        x: lastName_x,
+        y: lastName_y,
+        size: 10,
+        font: helveticaFont,
+        color: rgb(0.95, 0.1, 0.1),
+        rotate: degrees(0),
+      })
+
+      // First Name
+      firstPage.drawText(firstName, {
+        x: firstName_x,
+        y: firsName_y,
+        size: 10,
+        font: helveticaFont,
+        color: rgb(0.95, 0.1, 0.1),
+        rotate: degrees(0),
+      })
+
+      // UID
+      firstPage.drawText(UID, {
+        x: UID_x,
+        y: UID_y,
+        size: 10,
+        font: helveticaFont,
+        color: rgb(0.95, 0.1, 0.1),
+        rotate: degrees(0),
+      })
+
+      // Major
+      firstPage.drawText(major_check, {
+        x: major_x,
+        y: major_y,
+        size: 10,
+        font: helveticaFont,
+        color: rgb(0.95, 0.1, 0.1),
+        rotate: degrees(0),
+      })
+
+      // Date
+      firstPage.drawText(today, {
+        x: today_x,
+        y: today_y,
+        size: 10,
+        font: helveticaFont,
+        color: rgb(0.95, 0.1, 0.1),
+        rotate: degrees(0),
+      })
+
+      // Serialize the PDFDocument to bytes (a Uint8Array)
+      const pdfBytes = await pdfDoc.save()
+
+			// Trigger the browser to download the PDF document
+      download(pdfBytes, "pdf-lib_modification_example.pdf", "application/pdf");
+    }
+  </script>
+</html>
