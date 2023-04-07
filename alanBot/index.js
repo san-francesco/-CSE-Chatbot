@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 const dfff = require('dialogflow-fulfillment');
-
+const csv = require('csv-parser');
+const fs = require('fs');
 
 var admin = require("firebase-admin");
 
@@ -18,7 +19,8 @@ try {
     console.log("Error here" + error);
 }
 
-var db = admin.firestore();
+const db = admin.firestore();
+const database = admin.database();
 
 app.get('/', (req, res)=> {
     res.send("We are live")
@@ -73,63 +75,70 @@ app.post('/', express.json(), (req, res)=> {
 
     function gpa(agent) {
 
-        var u_number = agent.context.get("u_number").parameters.number;
-        console.log(u_number);
-        
-        return db.collection('mock')
-        .where("u_number", "==", u_number)
-        .get()
-        .then(ref => {
-            const matchedGpa = ref.docs.map((doc) => doc.data().gpa);
-            agent.add("DATA FETCHED FROM FIREBASE: " + matchedGpa);  
-        })
-        .catch((error) => {
-            console.error("Error getting documents ", error);
+        var u_number = agent.context.get("u_number").parameters['U-ID'];
+        var pin = agent.context.get("u_number").parameters['pin'];
+
+        return database.ref('/' + u_number).once('value').then((snapshot) => {
+            const student = snapshot.val();
+            if (student && student.pin_number == pin){
+                var payloadData = {
+                    "richContent":[
+                        [
+                            {
+                                "type": "info",
+                                "title": "Hi " + student.first_name + " " + student.last_name + "!",
+                                "subtitle": "Your GPA is: " + student.gpa
+                            }
+                        ]
+                    ]
+                }
+                agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))            }
+            else{
+                console.log('its in here');
+                agent.add('Unfortunately, your UID and pin are not valid. Please try again or contact USF IT for help.');
+            }
         });
 
     }
 
-    function uldpFormConfirmUID(agent) {
-        agent.add("Sending response from Webhook server");
-
-        var u_number = agent.context.get("awaiting-UID").parameters['U-ID'];
-
-        console.log(u_number);
+    // function uldpFormConfirmUID(agent) {
+    //     var u_number = agent.context.get("awaiting-UID").parameters['U-ID'];
         
-        return db.collection('mock')
-        .where("u_number", "==", u_number)        
-        .get()
-        .then(ref => {
-            agent.add("Whats your pin?");          
-        })
-        .catch((error) => {
-            agent.add("This pin does not match with the UID, please try again.");
-            console.error("Error getting documents ", error);
-        });
-    }
-    function uldpFormConfirmPin(agent) {
+    //     return database.ref('/' + u_number).once('value').then((snapshot) => {
+    //         const student = snapshot.val();
+    //         if (student){
+    //             agent.add('Hi' + student.first_name + '! What is your pin?');
+    //         }
+    //         else{
+    //             agent.add('Unfortunately, your u-number does not exist in my database. Please check your entry and try again.');
+    //         }
+    //     });
+    // }
 
-        var pin = agent.context.get("awaiting-pin").parameters['pin'];
+    // function uldpFormConfirmPin(agent) {
 
-        console.log(pin);
+    //     var pin = agent.context.get("awaiting-pin").parameters['pin'];
+    //     var u_number = agent.context.get("awaiting-UID").parameters['U-ID'];
+
+    //     console.log(pin);
+    //     console.log(u_number);
         
-        return db.collection('mock')
-        .where("pin_number", "==", pin)        
-        .get()
-        .then(ref => {
-            const gpa = ref.docs.map((doc) => doc.data().gpa);
-            agent.add("AUTHENTICATED");          
-        })
-        .catch((error) => {
-            agent.add("This pin does not match with the UID, please try again.");
-            console.error("Error getting documents ", error);
-        });
-    }
+    //     return db.collection('mock')
+    //     .where("u_number", "==", u_number).where("pin_number", "==", pin)        
+    //     .get()
+    //     .then(ref => {
+    //         const gpa = ref.docs.map((doc) => doc.data().gpa);
+    //         agent.add("AUTHENTICATED: " + gpa);          
+    //     })
+    //     .catch((error) => {
+    //         agent.add("This pin does not match with the UID, please try again.");
+    //         console.error("Error getting documents ", error);
+    //     });
+    // }
 
     var intentMap = new Map();
-    intentMap.set('uldpFormConfirmUID',uldpFormConfirmUID)
-
-    intentMap.set('uldpFormConfirmPin',uldpFormConfirmPin)
+    // intentMap.set('uldpFormConfirmUID',uldpFormConfirmUID)
+    // intentMap.set('uldpFormConfirmPin',uldpFormConfirmPin)
     intentMap.set('gpa', gpa)
     intentMap.set('finalConfirmation', finalConfirmation)
     intentMap.set('webhookDemo', demo)
