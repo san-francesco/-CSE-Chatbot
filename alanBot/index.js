@@ -116,6 +116,17 @@ const date = current_date();
                             },
                             "text": "Auto-filled ULDP Form",
                             "link": "https://san-francesco.github.io/alanBot/auto-fill-uldp.pdf",
+                          }, 
+                          {
+                            "options": [
+                                {
+                                  "text": "I need help with something else"
+                                },
+                                {
+                                  "text": "Bye!"
+                                }
+                              ],
+                              "type": "chips"
                           }
                     ]
                 ]
