@@ -90,7 +90,21 @@ app.post('/', express.json(), (req, res)=> {
                             "type": "info",
                             "title": "Hi " + matched_first_name + " " + matched_last_name + "!",
                             "subtitle": "Your GPA is: " + matched_gpa,
-                        }
+                        },
+                        {
+                            "options": [
+                              {
+                                "text": "Grade Forgiveness"
+                              },
+                              {
+                                "text": "I need help with something else"
+                              },
+                              {
+                                "text": "Bye!"
+                              }
+                            ],
+                            "type": "chips"
+                          }
                     ]
                 ]
             }
