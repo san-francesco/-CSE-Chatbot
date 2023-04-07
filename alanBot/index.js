@@ -105,14 +105,22 @@ const date = current_date();
             const newPdfBytes = await pdfDoc.save();
             fs.writeFileSync('auto-fill-uldp.pdf', newPdfBytes);
     
-            // Trigger an event that will prompt the user to download the file
-            agent.setFollowupEvent({
-                name: 'file_download',
-                parameters: {
-                    filename: 'auto-fill-uldp.pdf',
-                    fileurl: 'https://san-francesco.github.io/alanBot/auto-fill-uldp.pdf'
-                }
-            });
+            var payloadData = {
+                "richContent":[
+                    [
+                        {
+                            "type": "button",
+                            "icon": {
+                              "type": "chevron_right",
+                              "color": "#FF9800"
+                            },
+                            "text": "Auto-filled ULDP Form",
+                            "link": "https://san-francesco.github.io/alanBot/auto-fill-uldp.pdf",
+                          }
+                    ]
+                ]
+            }
+            agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))            
         }
         else {
             agent.add('Unfortunately, your UID and pin are not valid. Please try again or contact USF IT for help.');
