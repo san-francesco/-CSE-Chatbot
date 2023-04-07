@@ -89,7 +89,47 @@ app.post('/', express.json(), (req, res)=> {
 
     }
 
+    function uldpFormConfirmUID(agent) {
+        agent.add("Sending response from Webhook server");
+
+        var u_number = agent.context.get("awaiting-UID").parameters['U-ID'];
+
+        console.log(u_number);
+        
+        return db.collection('mock')
+        .where("u_number", "==", u_number)        
+        .get()
+        .then(ref => {
+            agent.add("Whats your pin?");          
+        })
+        .catch((error) => {
+            agent.add("This pin does not match with the UID, please try again.");
+            console.error("Error getting documents ", error);
+        });
+    }
+    function uldpFormConfirmPin(agent) {
+
+        var pin = agent.context.get("awaiting-pin").parameters['pin'];
+
+        console.log(pin);
+        
+        return db.collection('mock')
+        .where("pin_number", "==", pin)        
+        .get()
+        .then(ref => {
+            const gpa = ref.docs.map((doc) => doc.data().gpa);
+            agent.add("AUTHENTICATED");          
+        })
+        .catch((error) => {
+            agent.add("This pin does not match with the UID, please try again.");
+            console.error("Error getting documents ", error);
+        });
+    }
+
     var intentMap = new Map();
+    intentMap.set('uldpFormConfirmUID',uldpFormConfirmUID)
+
+    intentMap.set('uldpFormConfirmPin',uldpFormConfirmPin)
     intentMap.set('gpa', gpa)
     intentMap.set('finalConfirmation', finalConfirmation)
     intentMap.set('webhookDemo', demo)
