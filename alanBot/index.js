@@ -80,8 +80,21 @@ app.post('/', express.json(), (req, res)=> {
         .where("u_number", "==", u_number)
         .get()
         .then(ref => {
-            const matchedGpa = ref.docs.map((doc) => doc.data().gpa);
-            agent.add("DATA FETCHED FROM FIREBASE: " + matchedGpa);  
+            const matched_gpa = ref.docs.map((doc) => doc.data().gpa);
+            const matched_first_name = ref.docs.map((doc) => doc.data().first_name);
+            const matched_last_name = ref.docs.map((doc) => doc.data().last_name);
+            var payloadData = {
+                "richContent":[
+                    [
+                        {
+                            "type": "info",
+                            "title": "Hi " + matched_first_name + " " + matched_last_name + "!",
+                            "subtitle": "Your GPA is: " + matched_gpa,
+                        }
+                    ]
+                ]
+            }
+            agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))
         })
         .catch((error) => {
             console.error("Error getting documents ", error);
