@@ -18,7 +18,7 @@ try {
     console.log("Error here" + error);
 }
 
-var db = admin.firestore();
+const database = admin.database();
 
 app.get('/', (req, res)=> {
     res.send("We are live")
@@ -29,147 +29,38 @@ app.post('/', express.json(), (req, res)=> {
         request: req,
         response: res
     });
-   
-    function demo(agent){
-        agent.add("Sending response from Webhook server");
-    }
-
-    function customPayloadDemo(agent) {
-        var payloadData = {
-            "richContent":[
-                [
-                    {
-                        "type": "accordion",
-                        "title": "Accordion title",
-                        "subtitle": "Accordion subtitleAccordion subtitle",
-                        "image": {
-                            "src": {
-                                "rawUrl": "https/example.com/images/logo.png"
-                            }
-                        },
-                        "text": "Accordion text"
-                    }
-                ]
-            ]
-        }
-        agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))
-    }
-    
-    function finalConfirmation(agent) {
-        var name = agent.context.get("awaiting-name").parameters['given-name'];
-        var email = agent.context.get("awaiting-email").parameters.email;
-        console.log(name);
-        console.log(email);
-        agent.add('Hello ' + name + ', your email: ' + email + '. We confirmed your meeting.');
-        return db.collection('meeting').add({
-            name: name,
-            email: email,
-            time: Date.now()
-        }).then(ref =>
-            // Fetching free slots from G-cal
-            console.log("Meeting details added to DB")
-        )
-    }
 
     function gpa(agent) {
 
-        var u_number = agent.context.get("u_number").parameters.number;
-        console.log(u_number);
-        
-        return db.collection('mock')
-        .where("u_number", "==", u_number)
-        .get()
-        .then(ref => {
-            const matched_gpa = ref.docs.map((doc) => doc.data().gpa);
-            const matched_first_name = ref.docs.map((doc) => doc.data().first_name);
-            const matched_last_name = ref.docs.map((doc) => doc.data().last_name);
-            var payloadData = {
-                "richContent":[
-                    [
-                        {
-                            "type": "info",
-                            "title": "Hi " + matched_first_name + " " + matched_last_name + "!",
-                            "subtitle": "Your GPA is: " + matched_gpa,
-                        },
-                        {
-                            "options": [
-                              {
-                                "text": "Grade Forgiveness"
-                              },
-                              {
-                                "text": "I need help with something else"
-                              },
-                              {
-                                "text": "Bye!"
-                              }
-                            ],
-                            "type": "chips"
-                          }
+        var u_number = agent.context.get("u_number").parameters['U-ID'];
+        var pin = agent.context.get("u_number").parameters['pin'];
+
+        return database.ref('/' + u_number).once('value').then((snapshot) => {
+            const student = snapshot.val();
+            if (student && student.pin_number == pin){
+                var payloadData = {
+                    "richContent":[
+                        [
+                            {
+                                "type": "info",
+                                "title": "Hi " + student.first_name + " " + student.last_name + "!",
+                                "subtitle": "Your GPA is: " + student.gpa
+                            }
+                        ]
                     ]
-                ]
+                }
+                agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))            }
+            else{
+                console.log('its in here');
+                agent.add('Unfortunately, your UID and pin are not valid. Please try again or contact USF IT for help.');
             }
-            agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))
-        })
-        .catch((error) => {
-            console.error("Error getting documents ", error);
         });
 
     }
 
-    function industry_internship_db(agent) {
-
-        var u_number = agent.context.get("u-id").parameters['U-ID'];
-        var pin_number = agent.context.get("pin_number").parameters.pin;
-        console.log(u_number);
-        console.log(pin_number);
-        
-        return db.collection('mock')
-        .where("u_number", "==", u_number)
-        .where("pin_number", "==", pin_number)
-        .get()
-        .then(ref => {
-            const matched_uldp = ref.docs.map((doc) => doc.data().uldp);
-            const matched_first_name = ref.docs.map((doc) => doc.data().first_name);
-            const matched_last_name = ref.docs.map((doc) => doc.data().last_name);
-            var payloadData = {
-                "richContent":[
-                    [
-                        {
-                            "type": "info",
-                            "title": "Hello " + matched_first_name + " " + matched_last_name,
-                            "subtitle": "Your ULDP status is marked as: " + matched_uldp,
-                        },
-                        {
-                            "options": [
-                              {
-                                "text": "I need help with something else"
-                              },
-                              {
-                                "text": "Goodbye!"
-                              }
-                            ],
-                            "type": "chips"
-                          }
-                    ]
-                ]
-            }
-            console.log(matched_uldp);
-            console.log(matched_first_name);
-            console.log(matched_last_name);
-            agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))
-        })
-        .catch((error) => {
-            console.error("Error getting documents ", error);
-        });
-
-    }
 
     var intentMap = new Map();
-    intentMap.set('industry_internship_db', industry_internship_db)
     intentMap.set('gpa', gpa)
-    intentMap.set('finalConfirmation', finalConfirmation)
-    intentMap.set('webhookDemo', demo)
-    intentMap.set('customPayloadDemo', customPayloadDemo)
     agent.handleRequest(intentMap);
 })
 
