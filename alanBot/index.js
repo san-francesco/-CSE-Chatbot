@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const dfff = require('dialogflow-fulfillment');
+const { PDFDocument, StandardFonts } = require('pdf-lib');
+const fs = require('fs');
 
 
 var admin = require("firebase-admin");
@@ -30,6 +32,20 @@ app.post('/', express.json(), (req, res)=> {
         response: res
     });
 
+// utility functions
+function current_date() {
+    const date = new Date()
+    let day = date.getDate()
+    let month = date.getMonth() + 1
+    let year = date.getFullYear()
+    let fullDate = `${month}/${day}/${year}`
+    return fullDate
+}
+
+const date = current_date();
+
+
+
     function gpa(agent) {
 
         var u_number = agent.context.get("u_number").parameters['U-ID'];
@@ -58,8 +74,55 @@ app.post('/', express.json(), (req, res)=> {
 
     }
 
+    async function industry_internship_db(agent) {
+
+        var u_number = agent.context.get("u-id").parameters['U-ID'];
+        var pin = agent.context.get("pin_number").parameters['pin'];
+    
+        // load empty uldp form
+        const pdfBytes = fs.readFileSync('uldp-form.pdf');
+        const pdfDoc = await PDFDocument.load(pdfBytes);
+        const form = pdfDoc.getForm();
+    
+        // get unpopulated text fields
+        const last_name_field = form.getTextField('Text1');
+        const first_name_field = form.getTextField('Text2');
+        const u_number_field = form.getTextField('Text3');
+        const date_field = form.getTextField('Text6');
+        
+        // get student user from database
+        const snapshot = await database.ref('/' + u_number).once('value');
+        const student = snapshot.val();
+    
+        // if the student has a valid (u-id, pin), populate form fields with their info
+        if (student && student.pin_number == pin) {
+            last_name_field.setText(student.last_name);
+            first_name_field.setText(student.first_name);
+            u_number_field.setText('U' + student.u_number);
+            date_field.setText(date);
+    
+            // save the modified PDF to a file
+            const newPdfBytes = await pdfDoc.save();
+            fs.writeFileSync('auto-fill-uldp.pdf', newPdfBytes);
+    
+            // Trigger an event that will prompt the user to download the file
+            agent.setFollowupEvent({
+                name: 'file_download',
+                parameters: {
+                    filename: 'auto-fill-uldp.pdf',
+                    fileurl: 'https://san-francesco.github.io/alanBot/auto-fill-uldp.pdf'
+                }
+            });
+        }
+        else {
+            agent.add('Unfortunately, your UID and pin are not valid. Please try again or contact USF IT for help.');
+        }
+    
+    }
+
 
     var intentMap = new Map();
+    intentMap.set('industry_internship_db', industry_internship_db)
     intentMap.set('gpa', gpa)
     agent.handleRequest(intentMap);
 })
