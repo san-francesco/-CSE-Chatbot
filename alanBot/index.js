@@ -90,7 +90,21 @@ app.post('/', express.json(), (req, res)=> {
                             "type": "info",
                             "title": "Hi " + matched_first_name + " " + matched_last_name + "!",
                             "subtitle": "Your GPA is: " + matched_gpa,
-                        }
+                        },
+                        {
+                            "options": [
+                              {
+                                "text": "Grade Forgiveness"
+                              },
+                              {
+                                "text": "I need help with something else"
+                              },
+                              {
+                                "text": "Bye!"
+                              }
+                            ],
+                            "type": "chips"
+                          }
                     ]
                 ]
             }
@@ -102,7 +116,56 @@ app.post('/', express.json(), (req, res)=> {
 
     }
 
+    function industry_internship_db(agent) {
+
+        var u_number = agent.context.get("u-id").parameters['U-ID'];
+        var pin_number = agent.context.get("pin_number").parameters.pin;
+        console.log(u_number);
+        console.log(pin_number);
+        
+        return db.collection('mock')
+        .where("u_number", "==", u_number)
+        .where("pin_number", "==", pin_number)
+        .get()
+        .then(ref => {
+            const matched_uldp = ref.docs.map((doc) => doc.data().uldp);
+            const matched_first_name = ref.docs.map((doc) => doc.data().first_name);
+            const matched_last_name = ref.docs.map((doc) => doc.data().last_name);
+            var payloadData = {
+                "richContent":[
+                    [
+                        {
+                            "type": "info",
+                            "title": "Hello " + matched_first_name + " " + matched_last_name,
+                            "subtitle": "Your ULDP status is marked as: " + matched_uldp,
+                        },
+                        {
+                            "options": [
+                              {
+                                "text": "I need help with something else"
+                              },
+                              {
+                                "text": "Goodbye!"
+                              }
+                            ],
+                            "type": "chips"
+                          }
+                    ]
+                ]
+            }
+            console.log(matched_uldp);
+            console.log(matched_first_name);
+            console.log(matched_last_name);
+            agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))
+        })
+        .catch((error) => {
+            console.error("Error getting documents ", error);
+        });
+
+    }
+
     var intentMap = new Map();
+    intentMap.set('industry_internship_db', industry_internship_db)
     intentMap.set('gpa', gpa)
     intentMap.set('finalConfirmation', finalConfirmation)
     intentMap.set('webhookDemo', demo)
