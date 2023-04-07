@@ -74,7 +74,7 @@ const date = current_date();
 
     }
 
-    async function industry_internship_db(agent) {
+    async function uldp_auto_fill(agent) {
 
         var u_number = agent.context.get("u-id").parameters['U-ID'];
         var pin = agent.context.get("pin_number").parameters['pin'];
@@ -111,8 +111,8 @@ const date = current_date();
                         {
                             "type": "button",
                             "icon": {
-                              "type": "chevron_right",
-                              "color": "#FF9800"
+                              "type": "download",
+                              "color": "#006747"
                             },
                             "text": "Auto-filled ULDP Form",
                             "link": "https://san-francesco.github.io/alanBot/auto-fill-uldp.pdf",
@@ -141,7 +141,7 @@ const date = current_date();
 
 
     var intentMap = new Map();
-    intentMap.set('industry_internship_db', industry_internship_db)
+    intentMap.set('uldp_auto_fill', uldp_auto_fill)
     intentMap.set('gpa', gpa)
     agent.handleRequest(intentMap);
 })
