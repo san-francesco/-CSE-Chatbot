@@ -56,8 +56,8 @@ async function send_email_with_attchmt(to, subject, body, filePath) {
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        // user: '',    // our fake email
-        // pass: ''                // our unique bot key to bypass google security
+        user: 'alanthecsechatbot@gmail.com',    // our fake email
+        pass: 'rqoexecvqjwnpqom'                // our unique bot key to bypass google security
       }
     });
   
@@ -123,7 +123,117 @@ function gpa(agent) {
     });
 
 }
+async function intern_auto_fill(agent){
+    var u_number = agent.context.get("intern_form_disclaimer-followup").parameters['U-ID'];
+    var pin = agent.context.get("intern_form_disclaimer-followup").parameters['pin'];
+    // get student user from database
+    const snapshot = await database.ref('/' + u_number).once('value');
+    const student = snapshot.val();
+    // if the student has a valid (u-id, pin), populate form fields with their info
+    if (student.u_number == u_number && student.pin_number == pin) {
+        var path = '';
+        if (student.major == 'cpe' || student.major == 'cs'){
+            // load cse/cs internship form
+            path = 'industry-internship.pdf';
+        }
+        else{
+            // load cpe/it internship
+            path = 'internformforit.pdf';
+        }
+        const pdfBytes = fs.readFileSync(path);
+        const pdfDoc = await PDFDocument.load(pdfBytes);
+        const form = pdfDoc.getForm();
+        // get unpopulated text fields
+        var last_name_field;
+        if (student.major == 'cpe' || student.major == 'cs'){
+            // load cse/cs internship form
+            last_name_field = form.getTextField('Text1');
+        }
+        else{
+            // load cpe/it internship
+            last_name_field = form.getTextField('Text9');
+        }
+        const first_name_field = form.getTextField('Text2');
+        const date_field = form.getTextField('Text3');
+        const u_number_field = form.getTextField('Text4');
+        const address_field = form.getTextField('Text5');
+        const email_field = form.getTextField('Text6');
+        const classification_field = form.getTextField('Text7');        
+        last_name_field.setText(student.last_name);
+        first_name_field.setText(student.first_name);
+        date_field.setText(date);
+        u_number_field.setText(student.u_number);
+        address_field.setText(student.street_address);
+        email_field.setText(student.email);
+        classification_field.setText(student.class_level)
+        // save the modified PDF to a file
+        const newPdfBytes = await pdfDoc.save();
+        fs.writeFileSync('auto-fill-internship.pdf', newPdfBytes);
+        // send email to student
+        send_email_with_attchmt(student.email, 'Your Industry Internship Form', '<p>Your Industry Internship form is attached. Please verify that all the information is correct before sending it your supervising professor.</p><p>- <b>Alan, CSE Chatbot</b></p>', 'auto-fill-internship.pdf');
 
+        var payloadData = {
+            "richContent":[
+                [
+                    {
+                        "type": "description",
+                        "title": "Hi " + student.first_name + ",",
+                        "text": [
+                            "I just sent the auto-filled Industry Internship form to the email address we have on hand for you: " + student.email,
+                            "Please check your spam folder if you are having trouble locating it."
+                        ]
+                    },
+                    {
+                    "options": [
+                        {
+                            "text": "I need help with something else"
+                        },
+                        {
+                            "text": "Bye!"
+                        }
+                        ],
+                        "type": "chips"
+                    }
+                ]
+            ]
+        }
+        agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true })) 
+    }
+    else {
+        var payloadData = {
+            "richContent":[
+                [
+                    {
+                        "type": "description",
+                        "title": "Invalid PIN or U Number",
+                        "text": [
+                            "Unfortunately, your UID and pin are not valid. Please try again or contact USF IT for help.",
+                        ]
+                    },
+                        {
+                        "options": [
+                            {
+                                "text": "Auto-fill my ULDP Form"
+                            },
+                            {
+                                "text": "I don't know my PIN or UID"
+                            },
+                            {
+                                "text": "I need something else"
+                            },
+                            {
+                                "text": "Bye!"
+                            }
+                            ],
+                            "type": "chips"
+                        }
+                ]
+            ]
+        }
+        agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))            
+    }
+
+}
 async function uldp_auto_fill(agent) {
 
     var u_number = agent.context.get("u-id").parameters['U-ID'];
@@ -279,6 +389,7 @@ async function uldp_auto_fill(agent) {
 var intentMap = new Map();
 intentMap.set('uldp_auto_fill', uldp_auto_fill)
 intentMap.set('gpa', gpa)
+intentMap.set('intern_auto_fill',intern_auto_fill)
 agent.handleRequest(intentMap);
 })
 
