@@ -144,7 +144,15 @@ async function intern_auto_fill(agent){
         const pdfDoc = await PDFDocument.load(pdfBytes);
         const form = pdfDoc.getForm();
         // get unpopulated text fields
-        const last_name_field = form.getTextField('Text1');
+        var last_name_field;
+        if (student.major == 'cpe' || student.major == 'cs'){
+            // load cse/cs internship form
+            last_name_field = form.getTextField('Text1');
+        }
+        else{
+            // load cpe/it internship
+            last_name_field = form.getTextField('Text9');
+        }
         const first_name_field = form.getTextField('Text2');
         const date_field = form.getTextField('Text3');
         const u_number_field = form.getTextField('Text4');
