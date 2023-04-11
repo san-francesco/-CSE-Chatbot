@@ -50,14 +50,14 @@ function current_date() {
 const date = current_date();
 
 // Send email with PDF attachment
-async function send_email_with_attchmt(to, subject, body, filename, filePath) {
+async function send_email_with_attchmt(to, subject, body, filePath) {
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         // user: '',    // our fake email
-        // pass: ''                // our bot key
+        // pass: ''                // our unique bot key to bypass google security
       }
     });
   
@@ -72,7 +72,7 @@ async function send_email_with_attchmt(to, subject, body, filename, filePath) {
       html: body, // HTML body
       attachments: [
         {
-          filename: filename, // filename to be sent as attachment
+          filename: filePath, // filename to be sent as attachment
           content: pdf, // file content
           contentType: 'application/pdf' // content type
         }
@@ -178,7 +178,7 @@ async function uldp_auto_fill(agent) {
         fs.writeFileSync('auto-fill-uldp.pdf', newPdfBytes);
 
         // send email to student
-        send_email_with_attchmt(student.email, 'Your ULDP Form', '<p>Your ULDP form is attached. After verifying that all the information is correct, please initial and sign it before sending it to your advisor.</p><p>- <b>Alan, CSE Chatbot</b></p>', 'auto-fill-uldp.pdf', 'auto-fill-uldp.pdf');
+        send_email_with_attchmt(student.email, 'Your ULDP Form', '<p>Your ULDP form is attached. After verifying that all the information is correct, please initial and sign it before sending it to your advisor.</p><p>- <b>Alan, CSE Chatbot</b></p>', 'auto-fill-uldp.pdf');
 
         var payloadData = {
             "richContent":[
