@@ -55,10 +55,10 @@ async function send_email_with_attchmt(to, subject, body, filename, filePath) {
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
       service: 'gmail',
-    //   auth: {
-    //     user: '',    // our fake email
-    //     pass: ''                // our bot key
-    //   }
+      auth: {
+        // user: '',    // our fake email
+        // pass: ''                // our bot key
+      }
     });
   
     // read the PDF file from disk
@@ -83,6 +83,14 @@ async function send_email_with_attchmt(to, subject, body, filename, filePath) {
     let info = await transporter.sendMail(message);
   
     console.log('Message sent: %s', info.messageId);
+
+    // delete file after sending
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        console.log(`File has been deleted successfully.`);
+    } else {
+        console.log(`File does not exist.`);
+    }
   }
 
 
@@ -197,7 +205,7 @@ async function uldp_auto_fill(agent) {
                 ]
             ]
         }
-        agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))            
+        agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true })) 
     } else if (student && student.pin_number == pin && student.uldp == 'TRUE') { 
         var payloadData = {
             "richContent":[
