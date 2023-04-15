@@ -56,8 +56,8 @@ async function send_email_with_attchmt(to, subject, body, filePath) {
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        // user: '',    // our fake email
-        // pass: ''                // our unique bot key to bypass google security
+        user: 'alanthecsechatbot@gmail.com',    // our fake email
+        pass: 'rqoexecvqjwnpqom'                // our unique bot key to bypass google security
       }
     });
   
@@ -648,10 +648,140 @@ async function indpt_auto_fill(agent) {
 
 }
 
+async function gf_auto_fill(agent) {
+
+    var u_number = agent.context.get("gf-uid").parameters['U-ID'];
+    var pin = agent.context.get("gf-pin").parameters['pin'];
+
+    // load empty grade forgiveness forms
+    const pdfBytes = fs.readFileSync('grade-forgiveness.pdf');
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+    const form = pdfDoc.getForm();
+
+    // get fields from pdfs
+    const last_name_field = form.getTextField('Last');
+    const first_name_field = form.getTextField('First');
+    const u_number_field = form.getTextField('USFID Number');
+    const date_field = form.getTextField('Date');
+    
+    // get student user from database
+    const snapshot = await database.ref('/' + u_number).once('value');
+    const student = snapshot.val();
+
+    // if the student has a valid (u-id, pin), populate form fields with their info
+    if (student.u_number && student.pin_number == pin) {
+        last_name_field.setText(student.last_name);
+        first_name_field.setText(student.first_name);
+        u_number_field.setText('U' + student.u_number);
+        date_field.setText(date);
+
+        // save the modified PDF to a file
+        const newPdfBytes = await pdfDoc.save();
+        fs.writeFileSync('auto-fill-gf.pdf', newPdfBytes);
+
+        // send email to student
+        send_email_with_attchmt(student.email, 'Your Grade Forgiveness Form', '<p>Your Grade Forgiveness form is attached. After verifying that all the information is correct, please initial and sign it before sending it to your advisor.</p><p>- <b>Alan, CSE Chatbot</b></p>', 'auto-fill-uldp.pdf');
+
+        var payloadData = {
+            "richContent":[
+                [
+                    {
+                        "type": "description",
+                        "title": "Hi " + student.first_name + ",",
+                        "text": [
+                            "I just sent the auto-filled ULDP form to the email address we have on hand for you: " + student.email,
+                            "Please check your spam folder if you are having trouble locating it."
+                        ]
+                    },
+                    {
+                    "options": [
+                        {
+                            "text": "I need help with something else"
+                        },
+                        {
+                            "text": "Bye!"
+                        }
+                        ],
+                        "type": "chips"
+                    }
+                ]
+            ]
+        }
+        agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true })) 
+    } else if (student && student.pin_number == pin && student.uldp == 'TRUE') { 
+        var payloadData = {
+            "richContent":[
+                [
+                    {
+                        "type": "description",
+                        "title": "You're already considered an Upper Level student.",
+                        "text": [
+                            "According to our database, you're already an upper level student. You can double check this by navigating to DegreeWorks and verifying that you have the ULDP attribute. If you think this is an error, please contact your advisor.",
+                        ]
+                    },
+                        {
+                        "options": [
+                            {
+                                "text": "Who is my advisor?"
+                            },
+                            {
+                                "text": "Email my advisor"
+                            },
+                            {
+                                "text": "I need something else"
+                            },
+                            {
+                                "text": "Bye!"
+                            }
+                            ],
+                            "type": "chips"
+                        }
+                ]
+            ]
+        }
+        agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))            
+    }
+    else {
+        var payloadData = {
+            "richContent":[
+                [
+                    {
+                        "type": "description",
+                        "title": "Invalid PIN or U Number",
+                        "text": [
+                            "Unfortunately, your UID and pin are not valid. Please try again or contact USF IT for help.",
+                        ]
+                    },
+                        {
+                        "options": [
+                            {
+                                "text": "Auto-fill my ULDP Form"
+                            },
+                            {
+                                "text": "I don't know my PIN or UID"
+                            },
+                            {
+                                "text": "I need something else"
+                            },
+                            {
+                                "text": "Bye!"
+                            }
+                            ],
+                            "type": "chips"
+                        }
+                ]
+            ]
+        }
+        agent.add(new dfff.Payload(agent.UNSPECIFIED, payloadData, {sendAsMessage: true, rawPayload: true }))            
+    }
+
+}
+
 
 var intentMap = new Map();
 intentMap.set('uldp_auto_fill', uldp_auto_fill)
 intentMap.set('indpt_auto_fill', indpt_auto_fill)
+intentMap.set('gf_auto_fill', gf_auto_fill)
 intentMap.set('gpa', gpa)
 intentMap.set('intern_auto_fill',intern_auto_fill)
 agent.handleRequest(intentMap);
